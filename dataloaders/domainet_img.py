@@ -3,6 +3,7 @@ import torch
 from torchvision.datasets.folder import default_loader
 import torchvision.transforms as transforms
 import torch.utils.data as data
+import pandas as pd
 import os
 
 
@@ -16,9 +17,6 @@ class DomainNetDataset(data.Dataset):
         self.data_root = data_root
         self.train = train
         self.val = validation
-
-        # self.seen = 7
-        # self.unseen = 7
 
         # Is this path of images of each domain?
         self.image_paths = []
@@ -45,12 +43,8 @@ class DomainNetDataset(data.Dataset):
         else:
             self.read_single_domain(domains,0)
 
-        # Remove line below?
-        # self.labels = torch.LongTensor(self.labels)
-
         # TO DO: Is domain id same as domain index above?
         self.domain_id = torch.LongTensor(self.domain_id)
-        # self.classes = 7
 
     def read_single_domain(self, domain, id):
         """
@@ -69,30 +63,24 @@ class DomainNetDataset(data.Dataset):
         for file_name in file_names:
             self.read_single_file(file_name, id)
 
-    # def read_single_file(self, filename, id):
-    #     domain_images_list_path = os.path.join(self.data_root, filename)
-    #     with open(domain_images_list_path, 'r') as files_list:
-    #         for line in files_list:
-    #             line = line.strip()
-    #             local_path, _, class_id = read_split_line(line)
-    #             self.image_paths.append(os.path.join(self.data_root, 'kfold', local_path))
-    #             self.labels.append(class_id-1)
-    #             self.domain_id.append(id)
-    #             self.attributes.append(0)
-
-    def get_domain_embeddings(self):
-
 
     def get_domains(self):
         return self.domain_id, self.n_doms
 
-    # def get_labels(self):
-    #     return self.labels
 
     def __getitem__(self, index):
+
+        # TO DO: What is features below?
         features = self.loader(self.image_paths[index])
         features = self.transformer(features)
-        return features, self.attributes[index], self.domain_id[index], self.labels[index]
+
+        # full_embed: numpy array of vector embeddings of domains
+        full_embed = pd.read_csv('pred/pred_domain.csv')
+
+        # each_embed: numpy array of vector embeddings of single domains
+        each_embed = full_embed[self.domain_id]
+
+        return features, self.domain_id[index], full_embed, each_embed[index]
 
     def __len__(self):
         return len(self.image_paths)
