@@ -18,11 +18,14 @@ class DomainNetDataset(data.Dataset):
         self.train = train
         self.val = validation
 
+        # self.seen = 7
+        # self.unseen = 7
+
         # Is this path of images of each domain?
         self.image_paths = []
 
-        # Do we have labels?
-        # self.labels = []
+        # Labels: aeroplanes, cars etc
+        self.labels = []
 
         self.domain_id = []
 
@@ -67,6 +70,8 @@ class DomainNetDataset(data.Dataset):
     def get_domains(self):
         return self.domain_id, self.n_doms
 
+    def get_labels(self):
+        return self.labels
 
     def __getitem__(self, index):
 
