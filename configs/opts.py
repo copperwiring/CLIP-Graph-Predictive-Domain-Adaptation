@@ -2,7 +2,7 @@
 import argparse
 
 parser = argparse.ArgumentParser(description='AdaGraph')
-parser.add_argument('--dataset', default = 'compcars', help='Dataset to test (compcars, portraits)')
+parser.add_argument('--dataset', default = 'portraits', help='Dataset to test (compcars, portraits)')
 parser.add_argument('--network', default='resnet', type=str, help='Network to use (resnet, decaf)')
 parser.add_argument('--skip', default=None, type=str, help='Skip some settings (required only for portraits, eventually). Options are: regions,decades.')
 parser.add_argument('--suffix', default='./logs/adagraph_test', type=str, help='Suffix to give for storing the experiments')
@@ -12,6 +12,10 @@ args = parser.parse_args()
 assert args.network in ['resnet','decaf'], 'Please specify a valid network in [resnet,decaf]'
 
 DEVICE='cuda'
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"]='2'
+
 DATASET = args.dataset
 RESIDUAL = args.network == 'resnet'
 SKIP = args.skip

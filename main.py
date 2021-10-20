@@ -32,8 +32,9 @@ edge_vals_no_self=torch.FloatTensor(NUM_DOMS,NUM_DOMS).fill_(0)
 full_list=[]
 
 for meta in itertools.product(*DOMAINS):
-		full_list.append(meta)
-		meta_vectors[domain_converter(meta)]=get_meta_vector(meta)
+	print(meta)
+	full_list.append(meta)
+	meta_vectors[domain_converter(meta)]=get_meta_vector(meta)
 
 for i,vector in enumerate(meta_vectors):
         edge_vals[i,:]=compute_edge(vector,meta_vectors,i,1.)
