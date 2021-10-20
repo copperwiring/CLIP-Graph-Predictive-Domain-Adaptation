@@ -9,7 +9,6 @@ import os
 
 REGIONS_TO_IDX={'clipart': 0,'infograph': 1,'painting': 2,'quickdraw': 3, 'real': 4, 'sketch': 5}
 
-
 class DomainNetDataset(data.Dataset):
     def __init__(self, data_root, domains, train=True, validation=False, transformer=None):
         self.domains = domains
@@ -38,6 +37,7 @@ class DomainNetDataset(data.Dataset):
         else:
             self.transformer = transformer
 
+        # Read first domain or selected domains
         # Returns domain name and associated index.
         # To Do: Won't index be same as the domain id?
         if isinstance(domains, list):
@@ -58,14 +58,11 @@ class DomainNetDataset(data.Dataset):
         """
         if self.train:
             # To Do
+
         elif self.val:
             # To Do
         else:
             # TO DO
-
-        for file_name in file_names:
-            self.read_single_file(file_name, id)
-
 
     def get_domains(self):
         return self.domain_id, self.n_doms
