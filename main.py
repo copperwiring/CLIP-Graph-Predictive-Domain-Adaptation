@@ -31,6 +31,7 @@ edge_vals=torch.FloatTensor(NUM_DOMS,NUM_DOMS).fill_(0)
 edge_vals_no_self=torch.FloatTensor(NUM_DOMS,NUM_DOMS).fill_(0)
 full_list=[]
 
+import pdb; pdb.set_trace()
 for meta in itertools.product(*DOMAINS):
 	print(meta)
 	full_list.append(meta)
