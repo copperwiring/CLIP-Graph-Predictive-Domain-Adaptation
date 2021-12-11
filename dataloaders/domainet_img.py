@@ -58,6 +58,7 @@ class DomainNetDataset(data.Dataset):
         """
         if self.train:
             # To Do
+            # https://github.com/mancinimassimiliano/CuMix/blob/8a1cf3a5071e12ca4eee0fcf2e55edb9fdef48f4/data/domain_dataset.py#L126
 
         elif self.val:
             # To Do
@@ -71,6 +72,7 @@ class DomainNetDataset(data.Dataset):
         return self.labels
 
     def __getitem__(self, index):
+        # To change
 
         # TO DO: What is features below?
         features = self.loader(self.image_paths[index])

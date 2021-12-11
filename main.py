@@ -31,11 +31,9 @@ edge_vals=torch.FloatTensor(NUM_DOMS,NUM_DOMS).fill_(0)
 edge_vals_no_self=torch.FloatTensor(NUM_DOMS,NUM_DOMS).fill_(0)
 full_list=[]
 
-import pdb; pdb.set_trace()
 for meta in itertools.product(*DOMAINS):
-	print(meta)
-	full_list.append(meta)
-	meta_vectors[domain_converter(meta)]=get_meta_vector(meta)
+		full_list.append(meta)
+		meta_vectors[domain_converter(meta)]=get_meta_vector(meta)
 
 for i,vector in enumerate(meta_vectors):
         edge_vals[i,:]=compute_edge(vector,meta_vectors,i,1.)
@@ -50,6 +48,7 @@ res_upperbound_ref=[]
 res_adagraph=[]
 res_adagraph_refinement=[]
 
+# comment 1
 upperbound_loader=init_loader(BATCH_SIZE, domains=full_list, auxiliar= True, size=SIZE, std=STD)
 
 for meta_source in itertools.product(*DOMAINS):

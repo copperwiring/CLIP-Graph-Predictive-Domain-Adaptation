@@ -61,6 +61,8 @@ def get_clip_domain_embed(domain_names):
     text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
     top_probs, top_labels = text_probs.cpu().topk(1, dim=-1)
 
+    #---
+
     # Print the result
     pred_domain = []
     for i, image in enumerate(original_images):
