@@ -1,6 +1,7 @@
 import torch
 import torch.utils.data as data
-from torchvision.datasets.folder import  has_file_allowed_extension, is_image_file, IMG_EXTENSIONS, pil_loader, accimage_loader,default_loader
+from torchvision.datasets.folder import has_file_allowed_extension, is_image_file, IMG_EXTENSIONS, pil_loader, \
+    accimage_loader, default_loader
 
 from PIL import Image
 
@@ -10,37 +11,36 @@ import os.path
 import numpy as np
 from random import shuffle
 
+REGIONS_DICT = {'Alabama': 'South', 'Arizona': 'SW',
+                'California': 'Pacific',
+                'Florida': 'South',
+                'Indiana': 'MW',
+                'Iowa': 'MW',
+                'Kansas': 'MW',
+                'Massachusetts': 'NE',
+                'Michigan': 'MW',
+                'Missouri': 'South',
+                'Montana': 'RM',
+                'New-York': 'MA',
+                'North-Carolina': 'South',
+                'Ohio': 'MW',
+                'Oklahoma': 'SW',
+                'Oregon': 'Pacific',
+                'Pennsylvania': 'MA',
+                'South-Carolina': 'South',
+                'South-Dakota': 'MW',
+                'Texas': 'SW',
+                'Utah': 'RM',
+                'Vermont': 'NE',
+                'Virginia': 'South',
+                'Washington': 'Pacific',
+                'Wyoming': 'RM'}
 
-REGIONS_DICT={'Alabama': 'South', 'Arizona': 'SW',
- 'California': 'Pacific',
- 'Florida': 'South',
- 'Indiana': 'MW',
- 'Iowa': 'MW',
- 'Kansas': 'MW',
- 'Massachusetts': 'NE',
- 'Michigan': 'MW',
- 'Missouri': 'South',
- 'Montana': 'RM',
- 'New-York': 'MA',
- 'North-Carolina': 'South',
- 'Ohio': 'MW',
- 'Oklahoma': 'SW',
- 'Oregon': 'Pacific',
- 'Pennsylvania': 'MA',
- 'South-Carolina': 'South',
- 'South-Dakota': 'MW',
- 'Texas': 'SW',
- 'Utah': 'RM',
- 'Vermont': 'NE',
- 'Virginia': 'South',
- 'Washington': 'Pacific',
- 'Wyoming': 'RM'}
-
-REGIONS_TO_IDX={'RM': 6,'MA': 1,'NE': 2,'South': 3, 'Pacific': 4, 'MW': 0 , 'SW': 5}
-IDX_TO_REGIONS={ 6:'RM',1:'MA',2:'NE',3:'South',4: 'Pacific', 0:'MW', 5:'SW'}
+REGIONS_TO_IDX = {'RM': 6, 'MA': 1, 'NE': 2, 'South': 3, 'Pacific': 4, 'MW': 0, 'SW': 5}
+IDX_TO_REGIONS = {6: 'RM', 1: 'MA', 2: 'NE', 3: 'South', 4: 'Pacific', 0: 'MW', 5: 'SW'}
 
 
-def make_dataset(dir, class_to_idx, extensions, domains,start=1934):
+def make_dataset(dir, class_to_idx, extensions, domains, start=1934):
     images = []
     meta = []
 
@@ -54,31 +54,31 @@ def make_dataset(dir, class_to_idx, extensions, domains,start=1934):
             for fname in sorted(fnames):
                 if has_file_allowed_extension(fname, extensions):
                     path = os.path.join(root, fname)
-                    year=int(path.split('/')[-1].split('_')[0])
-                    city=(path.split('/')[-1].split('_')[1])
-                    region=REGIONS_DICT[city]
-                    pivot_year=start+(year-start)//10*10
+                    year = int(path.split('/')[-1].split('_')[0])
+                    city = (path.split('/')[-1].split('_')[1])
+                    region = REGIONS_DICT[city]
+                    pivot_year = start + (year - start) // 10 * 10
 
                     if (pivot_year, region) in domains:
                         item = (path, class_to_idx[target])
                         images.append(item)
-                        meta.append([year,region])
+                        meta.append([year, region])
 
     return images, meta
 
 
-
 class Portraits(data.Dataset):
 
-    def __init__(self, root, transform=None, target_transform=None,domains=[]):
+    def __init__(self, root, transform=None, target_transform=None, domains=[]):
         extensions = IMG_EXTENSIONS
         loader = default_loader
 
         classes, class_to_idx = self._find_classes(root)
         samples, self.meta = make_dataset(root, class_to_idx, extensions, domains)
         if len(samples) == 0:
-            raise(RuntimeError("Found 0 files in subfolders of: " + root + "\n"
-                               "Supported extensions are: " + ",".join(extensions)))
+            raise (RuntimeError("Found 0 files in subfolders of: " + root + "\n"
+                                                                            "Supported extensions are: " + ",".join(
+                extensions)))
 
         self.root = root
         self.loader = loader
@@ -92,7 +92,6 @@ class Portraits(data.Dataset):
         self.target_transform = target_transform
 
         self.imgs = self.samples
-
 
     def _find_classes(self, dir):
 
@@ -119,7 +118,7 @@ class Portraits(data.Dataset):
             sample = self.transform(sample)
         if self.target_transform is not None:
             target = self.target_transform(target)
-        y,p=self.meta[index]
+        y, p = self.meta[index]
 
         return sample, (y, p), target
 
@@ -149,41 +148,38 @@ class PortraitsSampler(torch.utils.data.sampler.Sampler):
     """
 
     def __init__(self, data_source, bs):
-        self.data_source=data_source
-        self.meta=np.array(self.data_source.get_meta())
-        self.dict_meta={}
-        self.indeces={}
-        self.keys=[]
-        self.bs=bs
-        for idx, (year,region) in enumerate(self.meta):
+        self.data_source = data_source
+        self.meta = np.array(self.data_source.get_meta())
+        self.dict_meta = {}
+        self.indeces = {}
+        self.keys = []
+        self.bs = bs
+        for idx, (year, region) in enumerate(self.meta):
             try:
-                self.dict_meta[str(year*20+region)].append(idx)
+                self.dict_meta[str(year * 20 + region)].append(idx)
             except:
-                self.dict_meta[str(year*20+region)]=[idx]
-                self.keys.append(str(year*20+region))
-                self.indeces[str(year*20+region)]=0
+                self.dict_meta[str(year * 20 + region)] = [idx]
+                self.keys.append(str(year * 20 + region))
+                self.indeces[str(year * 20 + region)] = 0
 
         for idx in self.keys:
             shuffle(self.dict_meta[idx])
 
-    def _sampling(self,idx, n):
-        if self.indeces[idx]+n>=len(self.dict_meta[idx]):
-            self.dict_meta[idx]=self.dict_meta[idx]+self.dict_meta[idx]
-        self.indeces[idx]=self.indeces[idx]+n
-        return self.dict_meta[idx][self.indeces[idx]-n:self.indeces[idx]]
-
-
+    def _sampling(self, idx, n):
+        if self.indeces[idx] + n >= len(self.dict_meta[idx]):
+            self.dict_meta[idx] = self.dict_meta[idx] + self.dict_meta[idx]
+        self.indeces[idx] = self.indeces[idx] + n
+        return self.dict_meta[idx][self.indeces[idx] - n:self.indeces[idx]]
 
     def _shuffle(self):
-        order=np.random.randint(len(self.keys),size=(len(self.data_source)//(self.bs)))
-        sIdx=[]
+        order = np.random.randint(len(self.keys), size=(len(self.data_source) // (self.bs)))
+        sIdx = []
         for i in order:
-            sIdx=sIdx+self._sampling(self.keys[i],self.bs)
+            sIdx = sIdx + self._sampling(self.keys[i], self.bs)
         return np.array(sIdx)
-
 
     def __iter__(self):
         return iter(self._shuffle())
 
     def __len__(self):
-        return len(self.data_source)/self.bs*self.bs
+        return len(self.data_source) / self.bs * self.bs

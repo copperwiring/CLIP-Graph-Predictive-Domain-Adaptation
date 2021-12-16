@@ -2,7 +2,7 @@
 import argparse
 
 parser = argparse.ArgumentParser(description='AdaGraph')
-parser.add_argument('--dataset', default = 'portraits', help='Dataset to test (compcars, portraits)')
+parser.add_argument('--dataset', default = 'domain_net', help='Dataset to test (compcars, portraits)')
 parser.add_argument('--network', default='resnet', type=str, help='Network to use (resnet, decaf)')
 parser.add_argument('--skip', default=None, type=str, help='Skip some settings (required only for portraits, eventually). Options are: regions,decades.')
 parser.add_argument('--suffix', default='./logs/adagraph_test', type=str, help='Suffix to give for storing the experiments')
@@ -24,15 +24,20 @@ SOURCE_GROUP = ['']
 STD = [0.229, 0.224, 0.225]
 SIZE = 224
 
+
 if DATASET == 'compcars':
     from configs.config_compcars import *
 
 elif DATASET == 'portraits':
     from configs.config_portraits import *
 
+elif DATASET == 'domain_net':
+    from configs.config_domainet import *
+
 else:
-    print("Please specify a valid dataset in [compcars,faces]")
+    print("Please specify a valid dataset in [compcars,faces, domain_net]")
     exit(1)
+
 
 TRAINING_GROUP = ['bn','downsample.1']
 

@@ -18,7 +18,6 @@ BANDWIDTH = 0.1
 DOMAINS = ['infograph', 'quickdraw', 'real', 'clipart', 'quickdraw', 'sketch']
 domain_id = {'infograph': 1, 'quickdraw':2, 'real':3, 'clipart':4, 'quickdraw':5, 'sketch':6}
 
-
 # What is this?
 CLASSES = 2
 
@@ -31,8 +30,16 @@ DATAROOT = "/shared-network/syadav/domain_images_random"
 # REGION_TO_VEC = {'MA': [0, .1], 'NE': [0., 0.], 'South': [1., 1.], 'Pacific': [0., 3.], 'MW': [0., 2.]}
 
 embed_df = pd.read_csv('pred/pred_domain.csv', index=False, header=False)
-pred_df = pd.DataFrame(pred_domain)
-domain_to_vec = {infograph: <its embedding>, quickdraw: <its embedding>}
+
+import pdb; pdb.set_trace()
+
+# Domain embeddings from descriptions
+domain_to_vec = {'infograph': embed_df['infograph'],
+                 'quickdraw': embed_df['quickdraw'],
+                 'real': embed_df['real'],
+                 'clipart': embed_df['clipart'],
+                 'quickdraw': embed_df['quickdraw'],
+                 'sketch': embed_df['sketch']}
 
 # Replace with domain id from dict
 def domain_converter(domain_id):

@@ -4,6 +4,9 @@ import csv, shutil, torch, pandas as pd, numpy as np
 import clip
 
 #import dataroot?
+base_path = "/shared-network/syadav/domain_images_random"
+images = []
+original_images = []
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -17,7 +20,7 @@ model.to(device).eval()
 # Get working directory
 PATH = os.getcwd()
 
-base_path = DATAROOT
+# base_path = DATAROOT
 images = []
 original_images = []
 
