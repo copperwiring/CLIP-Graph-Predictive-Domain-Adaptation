@@ -69,7 +69,7 @@ def get_clip_domain_embed(domain_names):
         pred = [domain_names[index] for index in top_labels[i].numpy()][0]
         pred_domain.append(pred)
 
-    pred_df = pd.DataFrame(pred_domain)
+    pred_df = pd.DataFrame(data=text_inputs.cpu().detach().numpy())
     print("Saving..", end=" ")
     pred_df.to_csv('pred/pred_domain.csv', index=False, header=False)
     return pred_df

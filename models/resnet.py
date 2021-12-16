@@ -193,7 +193,7 @@ def resnet18(pretrained=False, **kwargs):
 
 
 # AdaGraph ResNet
-def resnet18_domain(classes=4, domains=30, url=None, **kwargs):
+def resnet18_domain(classes=345, domains=5, url=None, **kwargs):
     """Constructs a ResNet-18 model.
     Args:
     	num_classes (int): the number of classes of the classification model

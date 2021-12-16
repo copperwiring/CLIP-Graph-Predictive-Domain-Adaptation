@@ -59,6 +59,7 @@ class DomainNetDataset(data.Dataset):
     # Read data from a single domain
     def read_single_domain(self, domain, id=0):
         if self.val or self.train:
+            # Needs to be fixed. What does it do?
             file_names = [domain + '_train.txt']
         else:
             # Note: if we are testing, we use all images of unseen classes contained in the domain,
@@ -98,6 +99,52 @@ class DomainNetDataset(data.Dataset):
     def __repr__(self):
         fmt_str = 'Dataset ' + self.dataset
         return fmt_str
+
+# Needs to be fixed - what does it do
+class DomainNetSampler(torch.utils.data.sampler.Sampler):
+    r"""Base class for all Samplers.
+
+    Every Sampler subclass has to provide an __iter__ method, providing a way
+    to iterate over indices of dataset elements, and a __len__ method that
+    returns the length of the returned iterators.
+    """
+
+    def __init__(self, data_source, bs):
+        self.data_source = data_source
+        self.meta = np.array(self.data_source.get_meta())
+        self.dict_meta = {}
+        self.indeces = {}
+        self.keys = []
+        self.bs = bs
+        for idx, (year, region) in enumerate(self.meta):
+            try:
+                self.dict_meta[str(year * 20 + region)].append(idx)
+            except:
+                self.dict_meta[str(year * 20 + region)] = [idx]
+                self.keys.append(str(year * 20 + region))
+                self.indeces[str(year * 20 + region)] = 0
+
+        for idx in self.keys:
+            shuffle(self.dict_meta[idx])
+
+    def _sampling(self, idx, n):
+        if self.indeces[idx] + n >= len(self.dict_meta[idx]):
+            self.dict_meta[idx] = self.dict_meta[idx] + self.dict_meta[idx]
+        self.indeces[idx] = self.indeces[idx] + n
+        return self.dict_meta[idx][self.indeces[idx] - n:self.indeces[idx]]
+
+    def _shuffle(self):
+        order = np.random.randint(len(self.keys), size=(len(self.data_source) // (self.bs)))
+        sIdx = []
+        for i in order:
+            sIdx = sIdx + self._sampling(self.keys[i], self.bs)
+        return np.array(sIdx)
+
+    def __iter__(self):
+        return iter(self._shuffle())
+
+    def __len__(self):
+        return len(self.data_source) / self.bs * self.bs
 
 #
 # # -- old ---

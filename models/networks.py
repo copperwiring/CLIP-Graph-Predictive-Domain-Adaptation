@@ -16,7 +16,7 @@ def load_pretrained(net,name):
 	return net
 
 
-def get_network(classes = 4, domains = 30, residual=False):
+def get_network(classes = 345, domains = 5, residual=False):
     if residual:
         return resnet18_domain(classes, domains, model_urls['resnet18'])
     return get_graph_net(classes, domains, model_urls['alexnet'])
