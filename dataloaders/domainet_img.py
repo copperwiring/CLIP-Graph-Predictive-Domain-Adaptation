@@ -80,6 +80,7 @@ class DomainNetDataset(data.Dataset):
                     self.image_paths.append(os.path.join(self.data_root, local_path))
                     self.labels.append(self.valid_classes.index(class_name))
                     self.domain_id.append(id)
+                    # Needs to be fixed -- do we need this?
                     self.attributes.append(self.attributes_dict[class_name].unsqueeze(0))
 
     def get_domains(self):

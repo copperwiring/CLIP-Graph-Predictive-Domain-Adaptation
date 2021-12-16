@@ -62,7 +62,7 @@ def init_loader(bs, domains=[], shuffle=False, auxiliar=False, size=224, std=[0.
         return torch.utils.data.DataLoader(dataset, batch_size=bs, drop_last=False, num_workers=4, shuffle=shuffle)
 
     else:
-        # Helpful for auxiliary sample
+        # Needs to be fixed -- Helpful for auxiliary sample
         return torch.utils.data.DataLoader(dataset, batch_size=bs, drop_last=False, num_workers=4,
                                            sampler=DomainNetSampler(dataset, bs))
 
