@@ -3,7 +3,7 @@ from PIL import Image
 import csv, shutil, torch, pandas as pd, numpy as np
 import clip
 
-#import dataroot?
+# import dataroot?
 base_path = "/shared-network/syadav/domain_images_random"
 images = []
 original_images = []
@@ -37,9 +37,6 @@ for file in all_files:
 
 image_input = torch.tensor(np.stack(images)).cuda()
 
-# Replace this with a variable - DOMAIN?
-domain_names = ['infograph', 'quickdraw', 'real', 'clipart', 'quickdraw', 'sketch']
-
 
 def get_clip_domain_embed(domain_names):
     """
@@ -64,7 +61,7 @@ def get_clip_domain_embed(domain_names):
     text_probs = (100.0 * image_features @ text_features.T).softmax(dim=-1)
     top_probs, top_labels = text_probs.cpu().topk(1, dim=-1)
 
-    #---
+    # ---
 
     # Print the result
     pred_domain = []
@@ -73,5 +70,12 @@ def get_clip_domain_embed(domain_names):
         pred_domain.append(pred)
 
     pred_df = pd.DataFrame(pred_domain)
+    print("Saving..", end=" ")
     pred_df.to_csv('pred/pred_domain.csv', index=False, header=False)
     return pred_df
+
+
+# Replace this with a variable - DOMAIN?
+domain_names = ['infograph', 'quickdraw', 'real', 'clipart', 'quickdraw', 'sketch']
+
+get_clip_domain_embed(domain_names)
