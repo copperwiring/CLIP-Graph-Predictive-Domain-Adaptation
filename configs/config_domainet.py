@@ -23,7 +23,7 @@ CLASSES = 345
 # Confirm this. Is it 5 (= number of domains)
 NUM_META = 3
 
-DATAROOT = "/shared-network/syadav/domain_images_random"
+DATAROOT = "/shared-network/syadav/"
 
 embed_df = pd.read_csv('pred/pred_domain.csv', index_col=False, header=None)
 
